@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="utf-8">
+    <title>VT : Elasticsearch</title>
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/reveal.js/3.0.0/css/reveal.min.css">
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/reveal.js/3.0.0/css/theme/white.css">
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/reveal.js/3.0.0/lib/css/zenburn.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="reveal">
+    <div class="slides">
+        <section class="splash">
+            <div class="content">
+                <img data-src="https://blog.rosehosting.com/blog/wp-content/uploads/2016/02/Elasticsearch.png">
+            </div>
+            <p><small> trjili - <strong>Galilée</strong></small></p>
+        </section>
+        <section>
+            <h3 class="title">Sommaire</h3>
+            <div class="content">
+                <ol>
+                    <li class="main">Présentation</li>
+                    <li class="main">Concept et Architecture</li>
+                    <li class="main">Installation</li>
+                    <li class="main">Configuration</li>
+                    <li class="main">Plugins</li>
+                    <li class="main">Api REST</li>
+                </ol>
+            </div>
+        </section>
+        <section>
+            <section>
+                <h4 class="title">Moteur de recherche ?</h4>
+                <div class="content">
+                    <ul>
+                        <li class="main">Indexation des documents</li>
+                        <li class="main">Recherche sur les indexs</li>
+                        <li class="main">Performance</li>
+                    </ul>
+                </div>
+            </section>
+            <section>
+                <h4 class="title">Elasticsearch</h4>
+                <div class="content">
+                    <ul>
+                        <li class="main">Développé par l’entreprise Elastic, fondée en 2012 (amsterdam)</li>
+                        <li class="main">Première version sortie en février 2010</li>
+                        <li class="main">Dernière version stable 2.3.4</li>
+                        <li class="main">Licence apache</li>
+                        <li class="main">Utilisé par Github, Wikipedia...</li>
+                    </ul>
+                </div>
+            </section>
+
+            <section>
+                <h4 class="title">Fonctionnalités</h4>
+                <div class="content">
+                    <ul>
+                        <li class="main">Indexation des documents</li>
+                        <li class="main">Recherche fulltext et structuré</li>
+                        <li class="main">Filtre et pagination des résultats</li>
+                        <li class="main">Navigation par facettes</li>
+                        <li class="main">Gestion des synonymes</li>
+                        <li class="main">Extraction du textes à partir des documents binaires</li>
+                        <li class="main">...</li>
+                    </ul>
+                </div>
+            </section>
+        </section>
+        <section>
+            <section>
+                <h4 class="title">Concept</h4>
+                <div class="content">
+                    <ul>
+                        <li class="main">NoSql documents</li>
+                        <li class="main">Apache lucene</li>
+                        <li class="main">Api Rest / Json</li>
+                        <li class="main">Scalable</li>
+                        <li class="main">Distribué</li>
+                        <li class="main">Sauvegarde et réplication automatique</li>
+                        <li class="main">Clustérisé (répartition sur plusieurs machines)</li>
+                        <li class="main">Indexation temps réel</li>
+                    </ul>
+                </div>
+            </section>
+            <section>
+                <h4 class="title">Architecture</h4>
+                <div class="content">
+                    <img src="https://stephen.fm/content/images/2016/06/elastic-architecture-example.jpeg">
+                </div>
+            </section>
+            <section>
+                <h4>Terminologie</h4>
+                <div class="content">
+                    <ul>
+                        <li class="main">
+                            Node : Une instance es en cours d’exécution (noeud par machine)
+                        </li>
+                        <li class="main">
+                            Cluster : Ensemble de noeuds qui se communiquent entre eux
+                        </li>
+                        <li class="main">
+                            Shard : Une instance lucène
+                        </li>
+                        <li class="main">
+                            Primary shard: shard principale d’un index
+                        </li>
+                        <li class="main">
+                            Secondary shard: Un shard répliqué
+                        </li>
+                        <li class="main">
+                            Index : Ensemble de documents de même type, découpé sur plusieurs primary shards (5 par défaut)
+                        </li>
+                        <li>Type : La nature du document</li>
+                        <li>Document : Ensemble de donnée au format JSON</li>
+                    </ul>
+                </div>
+            </section>
+        </section>
+        <section>
+            <h3 class="title">Installation</h3>
+            <div class="content">
+                <ul>
+                    <li class="main">Zip
+                        <ul>
+                            <li>Télécharger la distrubition officiel https://www.elastic.co/downloads/elasticsearch</li>
+                            <li>cd elasticsearch-{version}/</li>
+                            <li>./bin/elasticsearch</li>
+                        </ul>
+                    </li>
+                    <li class="main">
+                        APT
+                        <ul>
+                            <li>apt-get update && apt-get install elasticsearch</li>
+                        </ul>
+                    </li>
+                    <li class="main">
+                        RPM
+                        <ul>
+                            <li>yum install elasticsearch</li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </section>
+        <section>
+            <h3>Configuration</h3>
+            <div class="content">
+                <ul>
+                    <li class="main">
+                        /etc/elasticsearch/elasticsearch.yml
+                    </li>
+                </ul>
+    <pre>
+        <code>
+            cluster.name: "cluser-01"
+            node.name: "node-01"
+            path.data: "volume/data"
+            path.log: "var/log/elasticsearch.log"
+            path.plugin: "volume/plugins"
+        </code>
+    </pre>
+            </div>
+        </section>
+        <section>
+            <h3>Plugins</h3>
+            <div class="content">
+                <ul>
+                    <li class="main">
+                        Installer un plugin
+                        <ul>
+                            <li>bin/plugin install plugin_name</li>
+                            <li>http://host:9200/_plugin/[plugin_name]</li>
+                        </ul>
+                    </li>
+                    <li class="main">
+                        Exemples
+                        <ul>
+                            <li>Admin console : royrusso/elasticsearch-HQ</li>
+                            <li>Tableau de bord : lukas-vlcek/bigdesk</li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </section>
+        <section>
+            <section>
+                <h4 class="title">Index API 1/2</h4>
+                <div class="content">
+                    <ul>
+                        <li>Création
+<pre>
+    <code>
+        curl XPUT 'http://localhost:9200/blog/' -d '{
+            "settings" : {
+                "index": {
+                    "number_of_shards": 4,
+                    "number_of_replicas": 1
+                }
+            }
+        }'
+    </code>
+</pre>
+                        </li>
+                        <li>Lecture
+<pre>
+    <code>
+        XGET 'http://localhost:9200/blog/'
+    </code>
+</pre>
+                        </li>
+                    </ul>
+                </div>
+            </section>
+            <section>
+                <h4>Index API 2/2</h4>
+                <div class="content">
+                    <ul>
+                        <li>Mise à jour
+<pre>
+    <code>
+        curl -XPUT 'localhost:9200/blog/_settings' -d '{
+            "index" : {
+                "number_of_replicas" : 4
+            }
+        }'
+    </code>
+</pre>
+                        </li>
+                        <li>Suppression
+<pre>
+    <code>
+        curl -XDELETE 'http://localhost:9200/blog/'
+    </code>
+</pre>
+                        </li>
+                    </ul>
+                </div>
+            </section>
+            <section>
+                <h4 class="title">Document API (1/2)</h4>
+                <div class="content">
+                    <ul>
+                        <li>
+                            Création
+<pre>
+    <code>
+        curl -XPUT 'http://localhost:9200/blog/travel/1/_create' -d '{ document }'
+    </code>
+</pre>
+                        </li>
+                        <li>
+                            Lecture
+<pre>
+    <code>
+        curl -XGET 'http://localhost:9200/blog/travel/1'
+    </code>
+</pre>
+                        </li>
+                    </ul>
+
+                </div>
+            </section>
+            <section>
+                <h4 class="title">Document API (2/2)</h4>
+                <div class="content">
+                    <ul>
+                        <li>
+                            Mise à jour
+<pre>
+    <code>
+        curl -XPUT 'http://localhost:9200/blog/travel/1/_update' -d '{ document }'
+    </code>
+</pre>
+                        </li>
+                        <li>
+                            Suppression
+<pre>
+    <code>
+        curl -XDELETE 'http://localhost:9200/blog/travel/1' -d '{ document }'
+    </code>
+</pre>
+                        </li>
+                    </ul>
+                </div>
+            </section>
+            <section>
+                <h4 class="title">Recherche API</h4>
+                <div class="content">
+                    <ul>
+
+                        <li>
+                            Recherche Fulltext
+<pre>
+    <code>
+        curl -XPOST 'http://localhost:9200/blog/travel/_search' -d '{
+            "query": {
+                "query_string": {
+                    "query": "tunisia"
+                }
+            }
+        }'
+    </code>
+</pre>
+                        </li>
+                        <li> Recherche structuré (filtres)
+<pre>
+    <code>
+        curl -XPOST 'http://localhost:9200/blog/travel/_search' -d '{
+            "query": {
+                "filtered": {
+                    "filter": {
+                        "term": {
+                            "city": "paris"
+                        }
+                    }
+                }
+            }
+        }'
+    </code>
+</pre>
+                    </ul>
+                </div>
+            </section>
+        </section>
+    </div>
+</div>
+<script src="//cdn.jsdelivr.net/reveal.js/3.0.0/lib/js/head.min.js"></script>
+<script src="//cdn.jsdelivr.net/reveal.js/3.0.0/js/reveal.min.js"></script>
+<script>
+    Reveal.initialize({
+        dependencies: [{
+            src: '//cdn.jsdelivr.net/reveal.js/3.0.0/plugin/highlight/highlight.js',
+            async: true,
+            callback: function() {
+                hljs.initHighlightingOnLoad();
+            }
+        }]
+    });
+</script>
+</body>
+</html>
